@@ -146,6 +146,11 @@ class PairedCycleGANEyeModel(BaseModel):
         # Fake
         pred_fake = netD(fake.detach())
         loss_D_fake = self.criterionGAN(pred_fake, False)
+        # wgan-gp
+        gradient_penalty, gradients = networks.cal_gradient_penalty(
+            netD, real, fake, self.device,lambda_gp=10.0
+        )
+        gradient_penalty.backward(retain_graph=True)
         # Combined loss and calculate gradients
         loss_D = (loss_D_real + loss_D_fake) * 0.5
         loss_D.backward()
