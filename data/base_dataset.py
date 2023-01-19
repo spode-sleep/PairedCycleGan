@@ -84,7 +84,7 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
         transform_list.append(transforms.Grayscale(1))
     if 'resize' in opt.preprocess:
         osize = [opt.load_size, opt.load_size]
-        transform_list.append(transforms.Resize(osize, method))
+        transform_list.append(transforms.Resize(osize, transforms.InterpolationMode.NEAREST))
     elif 'scale_width' in opt.preprocess:
         transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size, method)))
 
@@ -108,7 +108,7 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BICUBIC, conve
         if grayscale:
             transform_list += [transforms.Normalize((0.5,), (0.5,))]
         else:
-            transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
+            transform_list += [transforms.Normalize((0.5, 0.5, 0.5, 0.5), (0.5, 0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
 
 
